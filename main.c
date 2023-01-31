@@ -13,7 +13,7 @@ float accuracy(float net_wpm, float gross_wpm);
 int main()
 {
     float Gross_wpm, total_time, Net_wpm, Accuracy;
-    int lenght, length_user_input, error;  
+    int length, length_user_input, error;  
     //Text contains the string that the user has to enter  
     // Test string     
     char text_display[1000] = "A definite article is an article that marks a definite noun phrase. Definite articles such as English the are used to refer to a particular member of a group. It may be something that the speaker has already mentioned or it may be otherwise something uniquely specified."
@@ -27,7 +27,7 @@ int main()
     
 
     gets(user_input);
-    lenght = strlen(user_input);
+    length = strlen(user_input);
     // printf("%s\n", user_input);
     
     total_time = 1;
@@ -38,11 +38,18 @@ int main()
     
     Net_wpm = net_wpm(length_user_input, error, total_time);
     Accuracy = accuracy(Net_wpm, Gross_wpm);
-    
-    printf("Error: %d\n", error);
-    printf("Gross WPM : %0.2f\n", Gross_wpm);
-    printf("Net WPM: %0.2f\n", Net_wpm);
-    printf("Accuracy: %0.2f\n", Accuracy);           
+    if (length_user_input < 20)
+    {
+        printf("Insufficient data to analyze. Please provide sufficient data to get accurate result\n");
+    }
+    else 
+    {
+        printf("Error: %d\n", error);
+        printf("Gross WPM : %0.2f\n", Gross_wpm);
+        
+        printf("Net WPM: %0.2f\n", Net_wpm);
+        printf("Accuracy: %0.2f\n", Accuracy);           
+    }
     
 
 }
@@ -99,7 +106,9 @@ as the accuracy of the user */
 float net_wpm(int total_charac_by_user, int error, float total_time)
 // here total_charac_by_user is the total characters entered by the user excluding the spaces
 {
-    float net_wpm = ((total_charac_by_user - error) / 5)/ total_time;
+    float correct_char = total_charac_by_user - error; 
+    float correct_word =  correct_char  /  5; 
+    float net_wpm = correct_word / total_time;
     return net_wpm;    
 }
 
