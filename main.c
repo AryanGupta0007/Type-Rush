@@ -51,11 +51,20 @@ void display_result(int error, float Gross_wpm, float Net_wpm, float Accuracy, i
     }
     else 
     {
+        printf("WPM stands for Word Per Minute");
         printf("Error: %d\n", error);
+        if (Gross_wpm < Net_wpm)
+        {
+            Gross_wpm = Net_wpm;
+        }
         printf("Gross WPM : %0.2f\n", Gross_wpm);
         
         printf("Net WPM: %0.2f\n", Net_wpm);
-        printf("Accuracy: %0.2f\n", Accuracy);           
+        if (Accuracy > 100)
+        {
+            Accuracy = 100;
+        }
+        printf("Accuracy: %0.2f%%\n", Accuracy);           
     }
     
 
