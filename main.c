@@ -56,9 +56,6 @@ int main() {
   wattroff(win,COLOR_PAIR(1));
   wmove(win, 1, 1);
   wrefresh(win);
-  //Using Multithreading to run timer in background
-  pthread_t Time_thread;
-  pthread_create(&Time_thread, NULL, timer, NULL);
   int row=1,col=1;
   wattron(win, COLOR_PAIR(2));
   for (int i = 0; i < strlen(dummy_text[mode]);i++) {
@@ -70,8 +67,13 @@ int main() {
   }
   wattroff(win, COLOR_PAIR(2));
   wrefresh(win);
+
+  //Using Multithreading to run timer in background
+  pthread_t Time_thread;
+  pthread_create(&Time_thread, NULL, timer, NULL);
+
   //USER INPUT
-  int index=0,display_text;
+  int index=0,display_text,pair=3;
   char input[2000];
   input[0]='\0';
   row=1;col=1;
@@ -89,7 +91,7 @@ int main() {
           wattron(win, COLOR_PAIR(2));
           col--;
           mvwprintw(win , row,col, "%c\b",dummy_text[mode][(row-1)*(x/2-2)+col-1]); //Formula for replacing with orignal text
-          wattroff(win, COLOR_PAIR(3));
+          wattroff(win, COLOR_PAIR(pair));
           input[--index]='\0';
         }
         wrefresh(win);
@@ -106,12 +108,16 @@ int main() {
         break;
       default:
      if (row<=20) {
-        wattron(win, COLOR_PAIR(3));
         input[index]=display_text;
         input[++index]='\0';
+        if (input[index-1]!=dummy_text[mode][index-1]) {
+          pair=4;
+        }
+        wattron(win, COLOR_PAIR(pair));
         mvwprintw(win , row, col, "%c",display_text);
-        wattroff(win, COLOR_PAIR(3));
+        wattroff(win, COLOR_PAIR(pair));
         wrefresh(win);
+        pair=3;
         col++;
       }
     }
@@ -142,12 +148,14 @@ int main() {
   wrefresh(res);
   attron(COLOR_PAIR(4));
   attron(A_BOLD);
-  mvprintw(y/2+4, x/2-13, "Press any key twice to quit");
+  mvprintw(y/2+4, x/2-11, "Press Escape key to quit");
   attroff(A_BOLD);
   attroff(COLOR_PAIR(4));
   refresh();
-  getch();
-  getch();
+  char c;
+  while ((c=getch())!=27){
+    continue;
+  }
   endwin(); //Clear the screen and exit
   return 0;
 }
